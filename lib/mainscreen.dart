@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loginform/splashscreen.dart';
 
-import 'loginscreen.dart';
+import 'loginscreen /loginscreen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
