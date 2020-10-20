@@ -40,29 +40,44 @@ class Signup extends StatelessWidget {
 
 final _formkey = GlobalKey<FormState>();
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
+  @override
+  _SignupScreenState createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  Color borderColour = Colors.transparent;
   TextEditingController getUserName = new TextEditingController();
   TextEditingController getPassword = new TextEditingController();
   TextEditingController getContact = new TextEditingController();
   TextEditingController getEmail = new TextEditingController();
   String setUsername, setPassword, setContact, setEmail;
   ScrollController scrollController;
+
+  Color passwordborderColour = Colors.transparent;
+  Color emailborderColour = Colors.transparent;
+  Color userBorderColor = Colors.transparent;
+  Color phoneBorderColour = Colors.transparent;
+
   @override
   Widget build(BuildContext context) {
     final fullName = TextFormField(
       controller: getUserName,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          prefixIcon: new Icon(Icons.account_circle),
-          hintText: "FullName",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        prefixIcon: new Icon(Icons.account_circle),
+        hintText: "Full Name",
+      ),
       validator: (value) {
-        setUsername = getUserName.text;
-        if (value.isEmpty) {
-          return 'Enter Username';
-        }
-        return null;
+        setState(() {
+          if (value.isEmpty) {
+            userBorderColor = Colors.red;
+            return null;
+          } else if (value.isNotEmpty) {
+            userBorderColor = Colors.transparent;
+            return null;
+          }
+        });
       },
     );
 
@@ -70,74 +85,87 @@ class SignupScreen extends StatelessWidget {
       controller: getEmail,
       obscureText: false,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          prefixIcon: Icon(Icons.mail),
-          // icon: new Icon(Icons.mail),
-          hintText: "Email",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        prefixIcon: Icon(Icons.mail),
+        // icon: new Icon(Icons.mail),
+        hintText: "E-Mail",
+      ),
       validator: (value) {
         setEmail = getEmail.text;
-        if (value.isEmpty) {
-          return 'Enter Email';
-        } else {
-          String mail = "@gmail.com";
-
-          if (setEmail.contains(mail)) {
+        setState(() {
+          if (value.isEmpty) {
+            emailborderColour = Colors.red;
+            return null;
           } else {
-            return 'Enter Valid mail';
+            String mail = "@gmail.com";
+
+            if (setEmail.contains(mail)) {
+              emailborderColour = Colors.transparent;
+              return null;
+            } else {
+              emailborderColour = Colors.red;
+              return null;
+            }
           }
-        }
-        return null;
+        });
       },
     );
 
     final phoneNUmber = TextFormField(
         controller: getContact,
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "phoneNumber",
-            prefixIcon: Icon(Icons.contact_phone),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "PhoneNumber",
+          prefixIcon: Icon(Icons.contact_phone),
+        ),
         validator: (value) {
           setContact = getContact.text;
-          if (value.isEmpty) {
-            return 'Enter PhoneNUmber';
-          } else {
-            Pattern phonePattern = r'^(?=.*?[0-9]).{10,}$';
-            RegExp phoneExp = new RegExp(phonePattern);
-            if (phoneExp.hasMatch(setContact)) {
+          setState(() {
+            if (value.isEmpty) {
+              phoneBorderColour = Colors.red;
+              return null;
             } else {
-              return 'Enter Valid Contact';
+              Pattern phonePattern = r'^(?=.*?[0-9]).{10,}$';
+              RegExp phoneExp = new RegExp(phonePattern);
+              if (phoneExp.hasMatch(setContact)) {
+                phoneBorderColour = Colors.transparent;
+                return null;
+              } else {
+                phoneBorderColour = Colors.red;
+
+                return null;
+              }
             }
-          }
-          return null;
+          });
         });
 
     final passwordField = TextFormField(
       controller: getPassword,
       obscureText: true,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          prefixIcon: new Icon(Icons.lock),
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: "Password",
+        prefixIcon: new Icon(Icons.lock),
+      ),
       validator: (value) {
         setPassword = getPassword.text;
-        if (value.isEmpty) {
-          return 'Enter Password';
-        } else {
-          Pattern passwordPattern =
-              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-          RegExp regExp = new RegExp(passwordPattern);
-          if (regExp.hasMatch(setPassword)) {
+        setState(() {
+          if (value.isEmpty) {
+            passwordborderColour = Colors.red;
+            return null;
           } else {
-            return 'Enter valid Password';
+            Pattern passwordPattern =
+                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+            RegExp regExp = new RegExp(passwordPattern);
+            if (regExp.hasMatch(setPassword)) {
+              passwordborderColour = Colors.transparent;
+              return null;
+            } else {
+              passwordborderColour = Colors.red;
+              return null;
+            }
           }
-        }
-        return null;
+        });
       },
     );
 
@@ -149,46 +177,59 @@ class SignupScreen extends StatelessWidget {
             Form(
                 key: _formkey,
                 child: Column(
-                  //mainAxisAlignment:  MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                    
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       alignment: Alignment.centerRight,
                       child: Card(
                         shadowColor: Colors.black,
                         elevation: 8,
-                        shape: StadiumBorder(),
+                        shape: StadiumBorder(
+                            side: BorderSide(
+                          color: userBorderColor,
+                        )),
                         child: fullName,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       alignment: Alignment.centerRight,
                       child: Card(
                         shadowColor: Colors.black,
                         elevation: 8,
-                        shape: StadiumBorder(),
+                        shape: StadiumBorder(
+                            side: BorderSide(
+                          color: emailborderColour,
+                        )),
                         child: emailField,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       alignment: Alignment.centerRight,
                       child: Card(
                         shadowColor: Colors.black,
                         elevation: 8,
-                        shape: StadiumBorder(),
+                        shape: StadiumBorder(
+                            side: BorderSide(
+                          color: phoneBorderColour,
+                        )),
                         child: phoneNUmber,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       alignment: Alignment.centerRight,
                       child: Card(
                         shadowColor: Colors.black,
                         elevation: 8,
-                        shape: StadiumBorder(),
+                        shape: StadiumBorder(
+                          side: BorderSide(color: passwordborderColour),
+                        ),
                         child: passwordField,
                       ),
                     ),
@@ -207,23 +248,15 @@ class SignupScreen extends StatelessWidget {
                         Colors.orange[600]
                       ])),
               child: FlatButton(
-                  child: Text('Signup'),
+              padding: EdgeInsets.symmetric(horizontal: 100),
+
+                  child: Text('Register',style: TextStyle(fontWeight: FontWeight.bold ),),
                   textColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                   onPressed: () {
-                    if (_formkey.currentState.validate()) {
-                      //print('tapped');
-                      print(setEmail +
-                          '\n' +
-                          setUsername +
-                          '\n' +
-                          setContact +
-                          '\n' +
-                          setPassword);
-                    } else
-                      return null;
+                    print(_formkey.currentState.validate());
                   }),
             ),
             SizedBox(
@@ -231,16 +264,22 @@ class SignupScreen extends StatelessWidget {
             ),
             RichText(
                 text: TextSpan(children: <TextSpan>[
-              TextSpan(text: 'Already a member:'),
+              TextSpan(text: 'Already a member?',style: TextStyle(color: Colors.black) ),
               TextSpan(
                   text: 'Signin',
                   style: TextStyle(color: Colors.blueGrey),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginScreen()));
+                      Navigator.pop(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
                     }),
-            ]))
+            ])),
+             SizedBox(
+              height: 24,
+            ),
+            
           ],
         ),
       ),

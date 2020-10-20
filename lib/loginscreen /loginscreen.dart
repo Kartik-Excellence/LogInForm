@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:loginform/main.dart';
 import 'package:loginform/signupscreen/signupscreen.dart';
 
 class Login extends StatelessWidget {
@@ -43,7 +42,14 @@ class Login extends StatelessWidget {
 
 final _loginFormKey = GlobalKey<FormState>();
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  Color passwordborderColour = Colors.transparent;
+  Color emailborderColour = Colors.transparent;
   String email;
   String password;
   bool isEmail = false;
@@ -51,37 +57,46 @@ class LoginScreen extends StatelessWidget {
   TextEditingController textEditingControll = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+
+
+
     final emailField = TextFormField(
       controller: textEditingController,
       obscureText: false,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          prefixIcon: new Icon(Icons.mail),
-          hintText: "Email",
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(32.0),
-              borderSide: new BorderSide(color: Colors.red))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        prefixIcon: new Icon(Icons.mail),
+        hintText: "E-Mail",
+      ),
       validator: (value) {
-        if (value.isEmpty) {
-          return 'Enter Email';
-        }
-        return null;
+        setState(() {
+          if (value.isEmpty) {
+            emailborderColour = Colors.red;
+            return null;
+          } else if (value.isNotEmpty) {
+            emailborderColour = Colors.transparent;
+            return null;
+          }
+        });
       },
     );
+
+
 
     final passwordField = TextFormField(
       controller: textEditingControll,
       obscureText: true,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hoverColor: Colors.grey,
-          hintText: "Password",
-          prefixIcon: new Icon(Icons.lock),
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hoverColor: Colors.grey,
+        hintText: "Password",
+        prefixIcon: new Icon(Icons.lock),
+      ),
       validator: (value) {
         if (value.isEmpty) {
-          return 'Enter Password';
+          passwordborderColour = Colors.red;
+        } else if (value.isNotEmpty) {
+          passwordborderColour = Colors.transparent;
         }
         return null;
       },
@@ -100,17 +115,22 @@ class LoginScreen extends StatelessWidget {
                   child: Card(
                     shadowColor: Colors.black,
                     elevation: 8,
-                    shape: StadiumBorder(),
+                    shape: StadiumBorder(
+                        side: BorderSide(
+                      color: emailborderColour,
+                    )),
                     child: emailField,
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  alignment: Alignment.centerRight,
                   child: Card(
                     shadowColor: Colors.black,
                     elevation: 8,
-                    shape: StadiumBorder(),
+                    shape: StadiumBorder(
+                        side: BorderSide(
+                      color: passwordborderColour,
+                    )),
                     child: passwordField,
                   ),
                 ),
@@ -122,7 +142,6 @@ class LoginScreen extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: Text('ForgotPassword')),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 80),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(45.0),
                 gradient: LinearGradient(
@@ -135,9 +154,11 @@ class LoginScreen extends StatelessWidget {
                       Colors.orange[600]
                     ])),
             child: FlatButton(
-              child: Text('Login'),
+              padding: EdgeInsets.symmetric(horizontal: 100),
+                  child: Text('Login',style: TextStyle(fontWeight: FontWeight.bold ),),
               textColor: Colors.white,
               onPressed: () {
+                print(_loginFormKey.currentState.validate());
                 email = textEditingController.text;
                 password = textEditingControll.text;
                 if (_loginFormKey.currentState.validate()) {
@@ -148,11 +169,11 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-              height: 24,
-            ),
+            height: 24,
+          ),
           RichText(
               text: TextSpan(children: <TextSpan>[
-            TextSpan(text: 'Dont have account:'),
+            TextSpan(text: 'Dont have account?',style: TextStyle(color: Colors.black)),
             TextSpan(
                 text: 'Signup',
                 style: TextStyle(color: Colors.blueGrey),
