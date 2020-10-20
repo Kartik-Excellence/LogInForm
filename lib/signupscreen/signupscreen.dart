@@ -115,7 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
         controller: getContact,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "PhoneNumber",
+          hintText: "Phone(10 digits)",
           prefixIcon: Icon(Icons.contact_phone),
         ),
         validator: (value) {
@@ -144,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
       obscureText: true,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Password",
+        hintText: "Password([A-Z],[a-z],[0-9],[@,#,!])",
         prefixIcon: new Icon(Icons.lock),
       ),
       validator: (value) {
@@ -248,9 +248,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         Colors.orange[600]
                       ])),
               child: FlatButton(
-              padding: EdgeInsets.symmetric(horizontal: 100),
-
-                  child: Text('Register',style: TextStyle(fontWeight: FontWeight.bold ),),
+                  padding: EdgeInsets.symmetric(horizontal: 100),
+                  child: Text(
+                    'Register',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   textColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -264,25 +266,40 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             RichText(
                 text: TextSpan(children: <TextSpan>[
-              TextSpan(text: 'Already a member?',style: TextStyle(color: Colors.black) ),
+              TextSpan(
+                  text: 'Already a member?',
+                  style: TextStyle(color: Colors.black)),
               TextSpan(
                   text: 'Signin',
                   style: TextStyle(color: Colors.blueGrey),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      Navigator.pop(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                      Navigator.of(context).pop(_createRoute());
                     }),
             ])),
-             SizedBox(
+            SizedBox(
               height: 24,
             ),
-            
           ],
         ),
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

@@ -57,9 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController textEditingControll = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-
-
-
     final emailField = TextFormField(
       controller: textEditingController,
       obscureText: false,
@@ -80,8 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       },
     );
-
-
 
     final passwordField = TextFormField(
       controller: textEditingControll,
@@ -155,7 +150,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ])),
             child: FlatButton(
               padding: EdgeInsets.symmetric(horizontal: 100),
-                  child: Text('Login',style: TextStyle(fontWeight: FontWeight.bold ),),
+              child: Text(
+                'Login',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               textColor: Colors.white,
               onPressed: () {
                 print(_loginFormKey.currentState.validate());
@@ -173,20 +171,36 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           RichText(
               text: TextSpan(children: <TextSpan>[
-            TextSpan(text: 'Dont have account?',style: TextStyle(color: Colors.black)),
+            TextSpan(
+                text: 'Dont have account?',
+                style: TextStyle(color: Colors.black)),
             TextSpan(
                 text: 'Signup',
                 style: TextStyle(color: Colors.blueGrey),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SignupScreen()));
+                    Navigator.of(context).push(_createRoute());
                   }),
           ]))
         ],
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => SignupScreen(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition( 
+        position: animation.drive(tween), 
+        child: child, 
+      ); 
+    },
+  );
 }
