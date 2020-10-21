@@ -290,6 +290,8 @@ class _SignupScreenState extends State<SignupScreen> {
 Route _createRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
+        // transitionDuration: Duration(milliseconds: 800),
+        // reverseTransitionDuration: Duration(milliseconds: 800),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
